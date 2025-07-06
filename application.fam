@@ -1,0 +1,12 @@
+App(
+    appid="music+player",
+    name="Music player",
+    apptype=FlipperAppType.EXTERNAL,
+    entry_point="hello_gui_main",
+    stack_size=1 * 1024,
+    fap_category="Misc",
+    sources=[
+    "main.c",
+    "ui.c",
+    ],
+)
