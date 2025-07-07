@@ -7,11 +7,10 @@ App(
     fap_category="Misc",
     sources=[
     "main.c",
-    "about_ui.c",
-    "settings_ui.c",
     "state_machine.c",
     "structs.c",
-    "main_ui.c",
-    "browse_ui.c",
+    "ui/main_ui.c",
+    "ui/about_ui.c",
+    "ui/settings_ui.c",
     ],
 )

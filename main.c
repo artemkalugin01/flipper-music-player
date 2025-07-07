@@ -4,9 +4,9 @@
 #include <input/input.h>
 #include <stdlib.h>
 
-#include "about_ui.h"
-#include "settings_ui.h"
-#include "main_ui.h"
+#include "ui/about_ui.h"
+#include "ui/settings_ui.h"
+#include "ui/main_ui.h"
 #include "structs.h"
 #include "state_machine.h"
 

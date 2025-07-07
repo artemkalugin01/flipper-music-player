@@ -1,4 +1,3 @@
-
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>
@@ -6,7 +5,8 @@
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>
-#include "structs.h"
+
+#include "../structs.h"
 
 void draw_main_pane(Canvas *canvas, void *context) {
   furi_assert(context);
