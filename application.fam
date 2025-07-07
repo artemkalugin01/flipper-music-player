@@ -1,5 +1,5 @@
 App(
-    appid="music+player",
+    appid="music_player",
     name="Music player",
     apptype=FlipperAppType.EXTERNAL,
     entry_point="hello_gui_main",
@@ -7,6 +7,10 @@ App(
     fap_category="Misc",
     sources=[
     "main.c",
-    "ui.c",
+    "state_machine.c",
+    "structs.c",
+    "ui/main_ui.c",
+    "ui/about_ui.c",
+    "ui/settings_ui.c",
     ],
 )
