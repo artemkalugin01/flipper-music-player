@@ -4,7 +4,7 @@
 #include <input/input.h>
 
 
-void draw_about_pane(Canvas *canvas, void *context) {
+void draw_settings_pane(Canvas *canvas, void *context) {
   furi_assert(context);
 
   canvas_clear(canvas);

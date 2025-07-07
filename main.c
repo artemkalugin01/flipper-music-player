@@ -2,50 +2,39 @@
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>
+#include <stdlib.h>
 
-// static const char *BROWSE = "Browse";
-// static const int BROWSE_IDX = 0;
+#include "about_ui.h"
+#include "settings_ui.h"
+#include "main_ui.h"
+#include "structs.h"
+#include "state_machine.h"
 
+static void app_draw_callback(Canvas* canvas, void* context) {
+    furi_assert(context);
+    AppState* state = context;
 
-// static const char *SHUFFLE = "Shuffle";
-// static const int SHUFFLE_IDX = 1;
-
-// static const char *ABOUT = "About";
-// static const int ABOUT_IDX = 2;
-
-
-static const char *menu_items[] = {
-    "Browse",
-    "Shuffle",
-    "About",
-};
-static const int menu_items_count = sizeof(menu_items) / sizeof(char *);
-
-typedef struct {
-  FuriMessageQueue *event_queue;
-  int selected_index;
-  int selected_pane;
-} AppState;
-
-static void app_draw_callback(Canvas *canvas, void *context) {
-  furi_assert(context);
-  AppState *state = context;
-
-  canvas_clear(canvas);
-  canvas_set_font(canvas, FontPrimary);
-
-  for (int i = 0; i < menu_items_count; i++) {
-    // Highlight the selected item
-    if (i == state->selected_index) {
-      canvas_draw_box(canvas, 0, i * 12, 128, 12);
-      canvas_set_color(canvas, ColorWhite);
-      canvas_draw_str(canvas, 2, (i * 12) + 10, menu_items[i]);
-      canvas_set_color(canvas, ColorBlack);
-    } else {
-      canvas_draw_str(canvas, 2, (i * 12) + 10, menu_items[i]);
+    // Decide which helper to call based on the current view
+    switch(state->current_view) {
+        case AppViewMainMenu:
+            draw_main_pane(canvas, state);
+            break;
+        case AppViewAbout:
+            draw_about_pane(canvas, state);
+            break;
+        // TODO different state
+        case AppViewBrowse:
+            draw_settings_pane(canvas, state);
+            break;
+        default:
+            // Should not be in default. Return non zero code but can't.
+            // Drawing main pane
+            // TODO logging?
+            draw_settings_pane(canvas, state);
+            break;
     }
-  }
 }
+
 
 static void app_input_callback(InputEvent *event, void *context) {
   furi_assert(context);
@@ -62,6 +51,7 @@ int32_t hello_gui_main(void *p) {
   AppState *state = malloc(sizeof(AppState));
   // Initialize the state
   state->selected_index = 0;
+  state->current_view = AppViewMainMenu;
   state->event_queue = furi_message_queue_alloc(8, sizeof(InputEvent));
 
   // The viewport is our application's window on the screen.
@@ -83,24 +73,13 @@ int32_t hello_gui_main(void *p) {
     // Get events from the queue
     if (furi_message_queue_get(state->event_queue, &event, FuriWaitForever) ==
         FuriStatusOk) {
-      // Process input events
-      if (event.type == InputTypeShort || event.type == InputTypeRepeat) {
-        if (event.key == InputKeyUp) {
-          // Decrement index
-          state->selected_index = (state->selected_index == 0)
-                                      ? menu_items_count - 1
-                                      : state->selected_index - 1;
-        } else if (event.key == InputKeyDown) {
-          // Increment index
-          state->selected_index =
-              (state->selected_index + 1) % menu_items_count;
-        } else if (event.key == InputKeyBack) {
-          // Stop application
-          running = false;
-        }
+      // Process the event and update the state
+      int state_update = process_state(event, state);
+      if (state_update != 0) {
+        running = false;
       }
     }
-    //  After changing state, tell the viewport to redraw
+    // call redraw after state change
     view_port_update(view_port);
   }
 
