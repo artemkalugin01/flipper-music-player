@@ -16,21 +16,18 @@ void draw_about_pane(Canvas* canvas, void* context) {
   uint8_t str_width;
   uint8_t x;
 
-  // Use FontPrimary for a bold effect to contrast with the smaller font.
   canvas_set_font(canvas, FontPrimary);
   const char* text_music = "Music";
   str_width = canvas_string_width(canvas, text_music);
   x = (screen_width - str_width) / 2;
   canvas_draw_str(canvas, x, 12, text_music);
 
-  // Use a smaller font for "aah" to create the desired contrast.
   canvas_set_font(canvas, FontKeyboard);
   const char* text_aah = "aah";
   str_width = canvas_string_width(canvas, text_aah);
   x = (screen_width - str_width) / 2;
   canvas_draw_str(canvas, x, 26, text_aah);
 
-  // Revert to FontPrimary for the rest of the text.
   canvas_set_font(canvas, FontPrimary);
   const char* text_player = "Player";
   str_width = canvas_string_width(canvas, text_player);
