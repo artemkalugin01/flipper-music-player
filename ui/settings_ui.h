@@ -5,5 +5,4 @@
 #include <gui/gui.h>
 #include <input/input.h>
 
-
-void draw_settings_pane(Canvas *canvas, void *context);
+void draw_settings_pane(Canvas* canvas, void* context);

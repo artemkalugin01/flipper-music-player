@@ -7,4 +7,4 @@
 
 #include "structs.h"
 
-int process_state(InputEvent event, AppState *state);
+int process_state(InputEvent event, AppState* state);
