@@ -17,6 +17,15 @@ typedef struct {
   AppView current_view;
 } AppState;
 
+// State of "Browse" pane of app
+typedef struct {
+    int selected_index;
+    // List of file names
+    char **file_names;
+    int file_count;
+} BrowsePaneState;
+
+
 // Menu items as a public constant array of strings - DECLARATION
 // Use 'extern' to declare that this constant is defined in an *another* .c file.
 extern const char *menu_items[];

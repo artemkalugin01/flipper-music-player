@@ -1,8 +1,7 @@
-#include "core/core_defines.h"
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>
-#include <stdlib.h>
+#include <storage/storage.h>
 
 #include "ui/about_ui.h"
 #include "ui/settings_ui.h"
@@ -10,31 +9,32 @@
 #include "structs.h"
 #include "state_machine.h"
 
-static void app_draw_callback(Canvas* canvas, void* context) {
-    furi_assert(context);
-    AppState* state = context;
+#define TAG "MusicPlayer"
 
-    // Decide which helper to call based on the current view
-    switch(state->current_view) {
-        case AppViewMainMenu:
-            draw_main_pane(canvas, state);
-            break;
-        case AppViewAbout:
-            draw_about_pane(canvas, state);
-            break;
-        // TODO different state
-        case AppViewBrowse:
-            draw_settings_pane(canvas, state);
-            break;
-        default:
-            // Should not be in default. Return non zero code but can't.
-            // Drawing main pane
-            // TODO logging?
-            draw_settings_pane(canvas, state);
-            break;
-    }
+static void app_draw_callback(Canvas *canvas, void *context) {
+  furi_assert(context);
+  AppState *state = context;
+
+  // Decide which helper to call based on the current view
+  switch (state->current_view) {
+  case AppViewMainMenu:
+    draw_main_pane(canvas, state);
+    break;
+  case AppViewAbout:
+    draw_about_pane(canvas, state);
+    break;
+  // TODO different state
+  case AppViewBrowse:
+    draw_settings_pane(canvas, state);
+    break;
+  default:
+    // Should not be in default. Return non zero code but can't.
+    // Drawing main pane
+    // TODO logging?
+    draw_settings_pane(canvas, state);
+    break;
+  }
 }
-
 
 static void app_input_callback(InputEvent *event, void *context) {
   furi_assert(context);
@@ -43,20 +43,39 @@ static void app_input_callback(InputEvent *event, void *context) {
   furi_message_queue_put(state->event_queue, event, FuriWaitForever);
 }
 
+static void test_fs() {
+
+  Storage *storage = furi_record_open(RECORD_STORAGE);
+
+  const char *path = "/ext/apps_data/Development/music_player";
+
+  FURI_LOG_I(TAG, "Listing files in %s...", path);
+
+  // Clean up all allocated resources.
+  //furi_record_close(RECORD_STORAGE);
+}
+
 int32_t hello_gui_main(void *p) {
   UNUSED(p);
+  FURI_LOG_I(TAG, "Info print:");
+  test_fs();
 
   // --- Allocation ---
-  // Allocate our state struct
+  // Allocate our app state struct
   AppState *state = malloc(sizeof(AppState));
   // Initialize the state
   state->selected_index = 0;
   state->current_view = AppViewMainMenu;
   state->event_queue = furi_message_queue_alloc(8, sizeof(InputEvent));
 
+  // Allocate the browse pane state
+  BrowsePaneState *browse_pane_state = malloc(sizeof(BrowsePaneState));
+  browse_pane_state->selected_index = 0;
+  browse_pane_state->file_names = NULL;
+  browse_pane_state->file_count = 0;
+
   // The viewport is our application's window on the screen.
   ViewPort *view_port = view_port_alloc();
-
 
   // Pass the *state* as the context to both callbacks
   view_port_draw_callback_set(view_port, app_draw_callback, state);
@@ -88,6 +107,7 @@ int32_t hello_gui_main(void *p) {
   view_port_free(view_port);
   furi_message_queue_free(state->event_queue);
   free(state);
+  free(browse_pane_state);
   furi_record_close(RECORD_GUI);
 
   return 0;

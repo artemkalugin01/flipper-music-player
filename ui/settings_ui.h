@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/canvas.h"
+#include <gui/canvas.h>
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>

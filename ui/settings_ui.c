@@ -10,15 +10,13 @@ void draw_settings_pane(Canvas *canvas, void *context) {
   canvas_clear(canvas);
   canvas_set_font(canvas, FontPrimary);
 
-  canvas_draw_box(canvas, 0, 0, 64, 12);
-  canvas_set_color(canvas, ColorWhite);
-  canvas_draw_str(canvas, 2, 12, "About section");
-
-  canvas_set_color(canvas, ColorXOR);
-  canvas_draw_str(canvas, 2, 36, "Press back");
+  canvas_set_color(canvas, ColorBlack);
+  canvas_draw_str(canvas, 2, 12, "File 1");
+  canvas_draw_str(canvas, 2, 24, "File 2");
+  canvas_set_font(canvas, FontSecondary);
+  canvas_draw_str(canvas, 2, 36, "File 3");
 
   // test
 
   canvas_draw_str(canvas, 2, 60, "XX");
-  canvas_draw_str(canvas, 60, 2, "YY");
 }
