@@ -12,5 +12,6 @@ App(
     "ui/main_ui.c",
     "ui/about_ui.c",
     "ui/settings_ui.c",
+    "fs/fs.c"
     ],
 )
