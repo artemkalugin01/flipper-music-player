@@ -6,9 +6,7 @@ typedef struct FileStorage {
     Storage* storage;
     int max_len;
     char** files;
-    char** dirs;
     uint16_t files_len;
-    uint16_t dirs_len;
 } FileStorage;
 
 
@@ -20,4 +18,4 @@ FileStorage* allocate_file_storage();
 void free_file_storage(FileStorage* fs);
 
 // Reads contents of dir
-void read_dir(FileStorage* fs, char* path);
+void get_file_names(FileStorage* fs);

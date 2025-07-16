@@ -2,11 +2,12 @@
 #include <storage/storage.h>
 #include <gui/gui.h>
 #include <input/input.h>
-#include <string.h>
 
+#include "core/log.h"
 #include "ui/about_ui.h"
 #include "ui/settings_ui.h"
 #include "ui/main_ui.h"
+#include "fs/fs.h"
 #include "structs.h"
 #include "state_machine.h"
 
@@ -48,6 +49,20 @@ static void app_input_callback(InputEvent* event, void* context) {
 int32_t hello_gui_main(void* p) {
     UNUSED(p);
     FURI_LOG_I(TAG, "Info print:");
+    
+    FileStorage* fs = allocate_file_storage();
+    free_file_storage(fs);
+    get_file_names(fs);
+
+    FURI_LOG_I(TAG, "Succesfully read all music files, listing them below...");
+    // print all found file names:
+    for(int i = 0; i < fs->files_len; i++) {
+        FURI_LOG_I(TAG, "fs is null: %d", fs == NULL);
+        FURI_LOG_I(TAG, "fs->files is null: %d", fs->files == NULL);
+        FURI_LOG_I(TAG, "fs->files_len is %d", fs->files_len);
+        FURI_LOG_I(TAG, "counter is %d ", i);
+        FURI_LOG_I(TAG, "counter is %d File name: %s", i, fs->files[i]);
+    }
 
     // --- Allocation ---
     // Allocate our app state struct
